@@ -15,8 +15,39 @@
     </ul>
   </form>
 <script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  const input = document.querySelector(".search");
+  const suggestions = document.querySelector(".suggestions");
+  const cities = [];
 
+  const numberWithCommas = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
+  const displaySuggestions = (list) => {
+    suggestions.innerHTML = "";
+    list.forEach( (data) => {
+      const innerText = `${data.city}, ${data.state}`;
+      const regex = new RegExp(input.value,"gi");
+      const innerTextHl = innerText.replace(regex, (val) => `<span class="hl">${val}</span>` );
+      suggestions.insertAdjacentHTML("beforeend", `<li><span>${innerTextHl}</span><span class="population">${numberWithCommas(data.population)}</span></li>`);
+    });
+  }
+
+  const updateSuggestions = () => {
+    // console.table(cities);
+    const suggestCities = cities.filter(data => {
+      const regex = new RegExp(input.value,"gi");
+      return data.city.match(regex) || data.state.match(regex);
+    });
+    displaySuggestions(suggestCities);
+  };
+
+  fetch(endpoint)
+    .then(response => response.json())
+    .then(data => cities.push(...data))
+
+  input.addEventListener("input", updateSuggestions);
 </script>
 </body>
 </html>
