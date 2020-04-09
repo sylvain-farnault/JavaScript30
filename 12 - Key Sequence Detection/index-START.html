@@ -7,6 +7,24 @@
 </head>
 <body>
 <script>
+  const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+  let lastKeyTime = new Date();
+  let keysSequence = [];
+  const maxInterval = 1; //max second(s) between 2 keys to valid a complet sequence.
+
+  const getCode = (event) => {
+    console.log(((new Date()) - lastKeyTime) / 1000);
+    if ((((new Date()) - lastKeyTime) / 1000) < maxInterval) {
+      keysSequence.push(event.keyCode);
+      if (keysSequence.join() === konami.join()) alert("You love Konami!");
+    }
+    else keysSequence = [event.keyCode];
+
+    lastKeyTime = new Date();
+    console.log(`keysSequence: ${keysSequence}`);
+  };
+
+  window.addEventListener("keydown", getCode);
 </script>
 </body>
 </html>
