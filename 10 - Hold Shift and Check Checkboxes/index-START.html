@@ -109,7 +109,7 @@ const updateTasks = (event) => {
         nbChecked ++;
       }
     });
-    if (nbChecked != 2) return;
+    if (nbChecked  % 2 === 1) return;
 
     inputs.forEach( (input) => {
       if (input.checked) {

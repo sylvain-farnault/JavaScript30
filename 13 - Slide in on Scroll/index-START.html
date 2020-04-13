@@ -58,6 +58,37 @@
       };
     }
 
+    // images.forEach( (image) => {
+    //   const topPos = image.getBoundingClientRect().top;
+    //   window.addEventListener("wheel", (event) => {
+    //       console.log(`scroll: ${window.scrollY}`);
+    //       if (window.scrollY > topPos){
+    //         console.log("show me the image");
+    //         console.log(`top: ${topPos} // scroll: ${window.scrollY} // width: ${image.width}`);
+    //         image.classList.add("active");
+    //       }
+    //   });
+    // });
+    const images = document.querySelectorAll('.slide-in');
+
+    const checkImages = (event) => {
+      images.forEach( image => {
+        // half way through the image
+        const slideInAt = window.scrollY + (window.innerHeight - image.height / 2);
+        // bottom of the image
+        const imageBottom = image.offsetTop + image.height;
+        const isHalfShown = slideInAt > image.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+        if (isHalfShown && isNotScrolledPast) {
+          image.classList.add('active');
+        } else {
+          image.classList.remove('active');
+        }
+      });
+    };
+
+    window.addEventListener("wheel", debounce(checkImages));
+
   </script>
 
   <style>
@@ -68,11 +99,11 @@
       font-size: 20px;
       font-weight: 200;
     }
-    
+
     body {
       margin: 0;
     }
-    
+
     *, *:before, *:after {
       box-sizing: inherit;
     }
@@ -101,20 +132,21 @@
 
     .slide-in {
       opacity: 0;
-      transition: all .5s;
+      transition: all 1s;
+      transition-timing-function: cubic-bezier(0.1, 0.7, 0.58, 1);
     }
 
     .align-left.slide-in {
-      transform: translateX(-30%) scale(0.95);
+      transform: scale(0.50);
     }
-    
+
     .align-right.slide-in {
-      transform: translateX(30%) scale(0.95);
+      transform: translateX(30%) translateY(20%) scale(0.70);
     }
 
     .slide-in.active {
       opacity: 1;
-      transform: translateX(0%) scale(1);
+      transform: translateX(0%) translateY(0%) scale(1);
     }
 
   </style>
